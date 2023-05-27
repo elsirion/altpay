@@ -79,11 +79,17 @@ struct Payment {
 
 #[derive(Debug, Deserialize, Clone)]
 struct Conf {
+	// TODO: fetch from node
 	network: String,
+	// TODO: use path relative to LN dir by default
 	ldk_data_dir: String,
+	// TODO: use path provided to plugin on init
 	rpc_path: String,
+	// TODO: make CLN config option
 	mpp_pref: u8,
+	// TODO: make CLN config option
 	probe_amount: u64,
+	// TODO: make CLN config option
 	rapid_gossip_sync_url: String,
 }
 #[tokio::main]
@@ -100,15 +106,19 @@ async fn main() -> Result<(), anyhow::Error> {
 		Ok(value) => value,
 		Err(_) => {
 			log::error!("PK not set");
+			// TODO: don't panic
 			panic!()
 		}
 	};
 
+	// TODO: get rid of config file, see comments on struct
 	let settings = Config::builder()
 		.add_source(config::File::with_name(&format!("{}/.config/altpay.toml", home_dir)))
 		.build()
 		.expect("no config file found, please add one in ~/.config/altpay.toml");
 	let mut config: Conf = settings.try_deserialize().unwrap();
+
+	// TODO: use path provided to plugin on init
 	config.rpc_path = if config.network == "bitcoin" {
 		format!("{}/.lightning/bitcoin/lightning-rpc", home_dir)}
 	else {
